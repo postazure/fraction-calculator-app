@@ -34,7 +34,7 @@ const style = StyleSheet.create({
 export default class NumPad extends React.Component {
 
   handleInput = (value) => () => {
-    this.props.onChange({value, type: EVENT_TYPE.integer})
+    this.props.onChange({value, type: this.props.eventType})
   }
 
   renderNumber = (value) => <TouchableHighlight
@@ -79,7 +79,7 @@ export default class NumPad extends React.Component {
         <View style={style.row}>
           {this.renderNumber(0)}
           {this.renderClear()}
-          {this.renderFrac()}
+          {this.props.openFractionNumpad ? this.renderFrac() : null}
         </View>
       </View>
     )

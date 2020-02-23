@@ -6,3 +6,8 @@ export const EVENT_TYPE = {
   evaluational: 'evaluational',
   clear: 'clear',
 }
+
+export const SEGMENT_TYPE = {
+  number: 'number',
+  operational: 'operational',
+}

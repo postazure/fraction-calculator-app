@@ -2,13 +2,18 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import NumPad from './components/NumPad'
 import OperationPad from './components/OperationPad'
-import { EVENT_TYPE } from './constants'
+import { EVENT_TYPE, SEGMENT_TYPE } from './constants'
+import Output from './components/Output'
+import { buildNumberSegment, buildOperationalSegment, calculateSegments, NumberSegment } from './segment'
 
 const INITIAL_STATE = {
   calculationSegments: [],
   showFractionNumpad: false,
-  currentSegment: []
+  currentSegmentEvents: []
 }
+
+const ROUNDING_ACCURACY = 16 // is equal to 1/16th
+const ROUNDING_STRATEGY = Math.floor // floor, ceiling, straight
 
 export default class App extends React.Component {
   state = INITIAL_STATE
@@ -21,31 +26,28 @@ export default class App extends React.Component {
         break
 
       case EVENT_TYPE.operational:
-        if (this.state.calculationSegments.length === 0 && this.state.currentSegment.length === 0) {
+        if (this.state.calculationSegments.length === 0 && this.state.currentSegmentEvents.length === 0) {
           // Prevent starting calculations with an operation
         } else {
           newState = {
             ...newState,
             showFractionNumpad: false,
-            currentSegment: [],
-            calculationSegments: [...this.state.calculationSegments, ...this.state.currentSegment, e]
+            currentSegmentEvents: [],
+            calculationSegments: [
+              ...this.state.calculationSegments,
+              ...(this.state.currentSegmentEvents.length > 0 ? [this.truncateValueSegment()] : []),
+              buildOperationalSegment(e.value)
+            ],
           }
         }
         break
+
+      case EVENT_TYPE.numerator:
+      case EVENT_TYPE.denominator:
       case EVENT_TYPE.integer:
         newState = {
           ...newState,
-          currentSegment: [...this.state.currentSegment, e],
-        }
-        break
-
-      case EVENT_TYPE.evaluational:
-        const result = this.evaluate()
-
-        newState = {
-          currentSegment: [],
-          calculationSegments: [{value: result, type: EVENT_TYPE.integer}],
-          showFractionNumpad: false
+          currentSegmentEvents: [...this.state.currentSegmentEvents, e],
         }
         break
     }
@@ -53,36 +55,63 @@ export default class App extends React.Component {
     this.setState(newState)
   }
 
+  truncateValueSegment = () => {
+    const segment = NumberSegment()
+
+    this.state.currentSegmentEvents.forEach(e => {
+      segment[e.type] = segment[e.type] + e.value.toString()
+    })
+
+    return segment
+  }
+
   handleOpenFractionNumpad = () => {
     this.setState({showFractionNumpad: true})
   }
 
-  evaluate = () => {
-    return eval([...this.state.calculationSegments, ...this.state.currentSegment].map(e => e.value).join(''))
+  handleEvaluation = () => {
+    const sum = calculateSegments(this.allCalculationSegments())
+    const segment = buildNumberSegment(sum, ROUNDING_STRATEGY, ROUNDING_ACCURACY)
+
+    this.setState({
+      currentSegmentEvents: [],
+      calculationSegments: [segment],
+      showFractionNumpad: false
+    })
+  }
+
+  allCalculationSegments = () => {
+    const segments = [...this.state.calculationSegments]
+
+    if (this.state.currentSegmentEvents.length > 0) {
+      segments.push(this.truncateValueSegment(this.state.currentSegmentEvents))
+    }
+
+    return segments
   }
 
   render () {
-    let displayString = [...this.state.calculationSegments, ...this.state.currentSegment].map(e => e.value).join('')
-    debugger
+    console.log(this.state)
     return (
       <View style={styles.container}>
         <View style={styles.displayContainer}>
-          <Text style={styles.display} adjustsFontSizeToFit={true}>{displayString}</Text>
+          <Output style={styles.display} segments={this.allCalculationSegments()}/>
         </View>
         <View style={styles.row}>
           {this.state.showFractionNumpad
             ? <View style={styles.numpad}>
-              <NumPad onChange={this.handleInput} openFractionNumpad={this.handleOpenFractionNumpad}/>
-              <NumPad onChange={this.handleInput} openFractionNumpad={this.handleOpenFractionNumpad}/>
+              <NumPad onChange={this.handleInput} eventType={EVENT_TYPE.numerator}/>
+              <NumPad onChange={this.handleInput} eventType={EVENT_TYPE.denominator}/>
             </View>
             : <View style={styles.numpad}>
-              <NumPad onChange={this.handleInput} openFractionNumpad={this.handleOpenFractionNumpad}/>
+              <NumPad onChange={this.handleInput} eventType={EVENT_TYPE.integer}
+                      openFractionNumpad={this.handleOpenFractionNumpad}/>
             </View>
           }
 
 
           <View style={styles.operationpad}>
-            <OperationPad onChange={this.handleInput}/>
+            <OperationPad onChange={this.handleInput} onEvaluate={this.handleEvaluation}/>
           </View>
 
         </View>
@@ -94,7 +123,7 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 40,
+    paddingTop: 60,
     backgroundColor: '#000',
     alignItems: 'center',
     justifyContent: 'center',
@@ -112,7 +141,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   displayContainer: {
-    height: 100,
+    height: 140,
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: 'yellow',
@@ -120,14 +149,9 @@ const styles = StyleSheet.create({
     padding: 10,
     display: 'flex',
     justifyContent: 'center',
-    flexDirection: 'column'
-  },
-  display: {
-    color: 'white',
-    textAlign: 'right',
-    width: '100%',
-    height: '100%',
+    flexDirection: 'column',
+    marginBottom: 100,
 
-    fontSize: 999, // Set to large and use auto scaling
-  }
+  },
+
 })

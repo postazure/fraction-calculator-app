@@ -32,21 +32,11 @@ const style = StyleSheet.create({
 
 export default class OperationPad extends React.Component {
 
-  renderOperation = (value) => <TouchableHighlight
-    style={style.button}
-    onPress={() => {
-      this.props.onChange({value, type: EVENT_TYPE.operational})
-    }}
-  >
+  renderOperation = (value) => <TouchableHighlight style={style.button} onPress={() => {this.props.onChange({value, type: EVENT_TYPE.operational})}}>
     <Text style={style.text}>{value}</Text>
   </TouchableHighlight>
 
-  renderEvaluate = () => <TouchableHighlight
-    style={style.button}
-    onPress={() => {
-      this.props.onChange({value: '=', type: EVENT_TYPE.evaluational})
-    }}
-  >
+  renderEvaluate = () => <TouchableHighlight style={style.button} onPress={this.props.onEvaluate}>
     <Text style={style.text}>=</Text>
   </TouchableHighlight>
 
