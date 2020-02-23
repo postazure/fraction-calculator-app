@@ -19,12 +19,13 @@ export const buildNumberSegment = (value, roundingStrategy, roundingAccuracy) =>
   const decimal = value - segment.integer
   const roundedDecimal = roundingStrategy(decimal * roundingAccuracy) / roundingAccuracy
   const fraction = convertToFraction(roundedDecimal)
-  segment.numerator = fraction.numerator
-  segment.denominator = fraction.denominator
+  if (fraction.numerator !== 0) {
+    segment.numerator = fraction.numerator
+    segment.denominator = fraction.denominator
+  }
 
   return segment
 }
-
 
 export const buildOperationalSegment = (operation) => {
   return {

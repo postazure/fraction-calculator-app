@@ -4,15 +4,14 @@ import { SEGMENT_TYPE } from '../constants'
 
 export default class Output extends React.Component {
   render () {
-    console.log(this.props)
-    const decoratedSegments = this.props.segments.map((segment, key) => {
+    const decoratedSegments = this.props.segments.map((segment) => {
+      const key = Math.random()
       if (segment.type === SEGMENT_TYPE.number) {
         return (
           <>
-            {parseInt(segment.integer) > 0 ? <IntegerOutput value={segment.integer} key={'int_' + key}/> : null}
-            {parseInt(segment.numerator) > 0 || parseInt(segment.denominator) > 0
-              ? <FractionalOutput key={'frac_' + key} numerator={segment.numerator}
-                                  denominator={segment.denominator}/>
+            {parseInt(segment.integer) !== 0 ? <IntegerOutput value={segment.integer} key={'int_' + key}/> : null}
+            {parseInt(segment.numerator)!== 0 || parseInt(segment.denominator) !== 0
+              ? <FractionalOutput key={'frac_' + key} numerator={segment.numerator} denominator={segment.denominator}/>
               : null}
           </>
         )
@@ -48,6 +47,7 @@ const style = StyleSheet.create({
   text: {
     color: 'white',
     fontSize: 999, // Set to large and use auto scaling
+    textAlign: 'center'
   },
   operation: {
     color: 'grey'
