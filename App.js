@@ -124,13 +124,11 @@ export default class App extends React.Component {
     if (this.state.currentSegmentEvents.length > 0) {
       segments.push(this.truncateValueSegment(this.state.currentSegmentEvents))
     }
-    console.log('segments', segments)
+
     return segments
   }
 
   render () {
-    console.log(this.state)
-
     return (
       <View style={styles.container}>
         <View style={styles.displayContainer}>
