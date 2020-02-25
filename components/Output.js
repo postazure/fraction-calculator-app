@@ -6,14 +6,15 @@ export default class Output extends React.Component {
   render () {
     const decoratedSegments = this.props.segments.map((segment) => {
       const key = Math.random()
+
       if (segment.type === SEGMENT_TYPE.number) {
         return (
-          <>
-            {parseInt(segment.integer) !== 0 ? <IntegerOutput value={segment.integer} key={'int_' + key}/> : null}
+          <React.Fragment key={"_" + key}>
+            {parseInt(segment.integer) !== 0 ? <IntegerOutput value={segment.integer}/> : null}
             {parseInt(segment.numerator)!== 0 || parseInt(segment.denominator) !== 0
-              ? <FractionalOutput key={'frac_' + key} numerator={segment.numerator} denominator={segment.denominator}/>
+              ? <FractionalOutput numerator={segment.numerator} denominator={segment.denominator}/>
               : null}
-          </>
+          </React.Fragment>
         )
       } else {
         return <OperationOutput value={segment.operation} key={'op_' + key}/>

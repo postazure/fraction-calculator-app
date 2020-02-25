@@ -1,6 +1,8 @@
 import { SEGMENT_TYPE } from './constants'
 import { convertToFraction } from './utils'
 
+const parseSegmentInt = (string) => string.length > 0 ? parseInt(string) : 0
+
 export const NumberSegment = () => {
   const segment = {
     type: SEGMENT_TYPE.number,
@@ -9,7 +11,10 @@ export const NumberSegment = () => {
     denominator: ''
   }
 
-  segment.compute = () => parseInt(segment.integer) + (segment.denominator.length > 0 ? (parseInt(segment.numerator) / parseInt(segment.denominator)) : 0)
+  segment.compute = () => {
+    return parseSegmentInt(segment.integer) + (segment.denominator.length > 0 ? (parseSegmentInt(segment.numerator) / parseSegmentInt(segment.denominator)) : 0)
+  }
+
   return segment
 }
 

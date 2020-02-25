@@ -5,6 +5,7 @@ import OperationPad from './components/OperationPad'
 import { EVENT_TYPE, SEGMENT_TYPE } from './constants'
 import Output from './components/Output'
 import { buildNumberSegment, buildOperationalSegment, calculateSegments, NumberSegment } from './segment'
+import UtilityPad from './components/UtilityPad'
 
 const INITIAL_STATE = {
   calculationSegments: [],
@@ -82,11 +83,10 @@ export default class App extends React.Component {
 
   allCalculationSegments = () => {
     const segments = [...this.state.calculationSegments]
-
     if (this.state.currentSegmentEvents.length > 0) {
       segments.push(this.truncateValueSegment(this.state.currentSegmentEvents))
     }
-
+    console.log('segments', segments)
     return segments
   }
 
@@ -97,20 +97,26 @@ export default class App extends React.Component {
         <View style={styles.displayContainer}>
           <Output style={styles.display} segments={this.allCalculationSegments()}/>
         </View>
+
         <View style={styles.row}>
-          {this.state.showFractionNumpad
-            ? <View style={styles.numpad}>
-              <NumPad onChange={this.handleInput} eventType={EVENT_TYPE.numerator}/>
-              <NumPad onChange={this.handleInput} eventType={EVENT_TYPE.denominator}/>
-            </View>
-            : <View style={styles.numpad}>
-              <NumPad onChange={this.handleInput} eventType={EVENT_TYPE.integer}
-                      openFractionNumpad={this.handleOpenFractionNumpad}/>
-            </View>
-          }
+
+          <View style={styles.left}>
+            <UtilityPad/>
+
+            {this.state.showFractionNumpad
+              ? <View style={styles.numpad}>
+                <NumPad onChange={this.handleInput} eventType={EVENT_TYPE.numerator}/>
+                <NumPad onChange={this.handleInput} eventType={EVENT_TYPE.denominator}/>
+              </View>
+              : <View style={styles.numpad}>
+                <NumPad onChange={this.handleInput} eventType={EVENT_TYPE.integer}
+                        openFractionNumpad={this.handleOpenFractionNumpad}/>
+              </View>
+            }
+          </View>
 
 
-          <View style={styles.operationpad}>
+          <View style={styles.right}>
             <OperationPad onChange={this.handleInput} onEvaluate={this.handleEvaluation}/>
           </View>
 
@@ -123,7 +129,7 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 60,
+    paddingTop: 80,
     backgroundColor: '#000',
     alignItems: 'center',
     justifyContent: 'center',
@@ -134,10 +140,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1
   },
-  numpad: {
+  left: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'column',
     flex: 3,
   },
-  operationpad: {
+  right: {
+    flex: 1,
+  },
+  numpad: {
+    flex: 4,
+  },
+  utiltyPad: {
     flex: 1,
   },
   displayContainer: {
@@ -150,7 +165,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',
-    marginBottom: 100,
+    marginBottom: 40,
 
   },
 
