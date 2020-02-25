@@ -36,7 +36,7 @@ export default class OperationPad extends React.Component {
     <Text style={style.text}>{value}</Text>
   </TouchableOpacity>
 
-  renderEvaluate = () => <TouchableOpacity style={style.button} onPress={this.props.onEvaluate}>
+  renderEvaluate = () => <TouchableOpacity style={[style.button, {backgroundColor: '#778899'}]} onPress={this.props.onEvaluate}>
     <Text style={style.text}>=</Text>
   </TouchableOpacity>
 
