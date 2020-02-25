@@ -4,7 +4,6 @@ export const EVENT_TYPE = {
   denominator: 'denominator',
   operational: 'operational',
   evaluational: 'evaluational',
-  clear: 'clear',
 }
 
 export const SEGMENT_TYPE = {

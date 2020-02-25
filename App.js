@@ -24,10 +24,6 @@ export default class App extends React.Component {
   handleInput = (e) => {
     let newState = {}
     switch (e.type) {
-      case EVENT_TYPE.clear:
-        newState = INITIAL_STATE
-        break
-
       case EVENT_TYPE.operational:
         if (this.state.calculationSegments.length === 0 && this.state.currentSegmentEvents.length === 0 && !this.state.solution) {
           // Prevent starting calculations with an operation
@@ -79,6 +75,8 @@ export default class App extends React.Component {
     }
   }
 
+  handleAllClear = () => this.setState(INITIAL_STATE)
+
   truncateValueSegment = () => {
     const segment = NumberSegment()
 
@@ -94,7 +92,12 @@ export default class App extends React.Component {
   }
 
   handleEvaluation = () => {
-    const sum = calculateSegments(this.allCalculationSegments())
+    let segments = this.allCalculationSegments()
+    if (segments.length < 3) {
+      return this.setState({showFractionNumpad: false})
+    }
+
+    const sum = calculateSegments(segments)
     const segment = buildNumberSegment(sum, ROUNDING_STRATEGY, ROUNDING_ACCURACY)
 
     this.setState({
@@ -128,7 +131,7 @@ export default class App extends React.Component {
         <View style={styles.row}>
 
           <View style={styles.left}>
-            {/*<UtilityPad/>*/}
+            <UtilityPad onClear={this.handleAllClear}/>
 
             {this.state.showFractionNumpad
               ? <View style={styles.numpad}>

@@ -35,9 +35,9 @@ export default class UtilityPad extends React.Component {
     return (
       <View style={style.pad}>
 
-        <PadButton label={'AC'} onPress={()=>{}}/>
-        <PadButton label={'¹⁄₁₆'} onPress={()=>{}}/>
-        <PadButton label={'↕'} onPress={()=>{}}/>
+        <PadButton label={'C'} onPress={this.props.onClear}/>
+        {/*<PadButton label={'¹⁄₁₆'} onPress={()=>{}}/>*/}
+        {/*<PadButton label={'↕'} onPress={()=>{}}/>*/}
       </View>
     )
   }
