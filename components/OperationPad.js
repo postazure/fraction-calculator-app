@@ -24,7 +24,7 @@ const style = StyleSheet.create({
     justifyContent: 'center'
   },
   text: {
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: 'bold',
     alignSelf: 'center'
   }
@@ -43,10 +43,10 @@ export default class OperationPad extends React.Component {
   render () {
     return (
       <View style={style.pad}>
-        {this.renderOperation('+')}
-        {this.renderOperation('-')}
-        {this.renderOperation('*')}
         {this.renderOperation('/')}
+        {this.renderOperation('*')}
+        {this.renderOperation('-')}
+        {this.renderOperation('+')}
         {this.renderEvaluate()}
       </View>
     )
