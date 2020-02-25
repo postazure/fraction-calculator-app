@@ -12,10 +12,10 @@ const INITIAL_STATE = {
   showFractionNumpad: false,
   currentSegmentEvents: [],
   solution: undefined,
-  showSolution: false
+  showSolution: false,
+  roundingAccuracy: 16 // is equal to 1/16th
 }
 
-const ROUNDING_ACCURACY = 16 // is equal to 1/16th
 const ROUNDING_STRATEGY = Math.floor // floor, ceiling, straight
 
 export default class App extends React.Component {
@@ -91,6 +91,15 @@ export default class App extends React.Component {
     this.setState({showFractionNumpad: true})
   }
 
+  cycleRoundingAccuracy = () => {
+    const possibleDenominators = [2, 4, 8, 16, 32, 64]
+    let currentIndex = possibleDenominators.indexOf(this.state.roundingAccuracy)
+    if (currentIndex++ >= possibleDenominators.length - 1) {
+      currentIndex = 0
+    }
+    this.setState({roundingAccuracy: possibleDenominators[currentIndex]})
+  }
+
   handleEvaluation = () => {
     let segments = this.allCalculationSegments()
     if (segments.length < 3) {
@@ -98,7 +107,7 @@ export default class App extends React.Component {
     }
 
     const sum = calculateSegments(segments)
-    const segment = buildNumberSegment(sum, ROUNDING_STRATEGY, ROUNDING_ACCURACY)
+    const segment = buildNumberSegment(sum, ROUNDING_STRATEGY, this.state.roundingAccuracy)
 
     this.setState({
       currentSegmentEvents: [],
@@ -131,7 +140,11 @@ export default class App extends React.Component {
         <View style={styles.row}>
 
           <View style={styles.left}>
-            <UtilityPad onClear={this.handleAllClear}/>
+            <UtilityPad
+              onClear={this.handleAllClear}
+              onRoundingAccuracyPress={this.cycleRoundingAccuracy}
+              roundingAccuracy={this.state.roundingAccuracy}
+            />
 
             {this.state.showFractionNumpad
               ? <View style={styles.numpad}>

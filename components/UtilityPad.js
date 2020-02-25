@@ -36,14 +36,30 @@ export default class UtilityPad extends React.Component {
       <View style={style.pad}>
 
         <PadButton label={'C'} onPress={this.props.onClear}/>
-        {/*<PadButton label={'¹⁄₁₆'} onPress={()=>{}}/>*/}
+        <PadButton label={getLabelForAccuracy(this.props.roundingAccuracy)} onPress={this.props.onRoundingAccuracyPress}/>
         {/*<PadButton label={'↕'} onPress={()=>{}}/>*/}
       </View>
     )
   }
 }
 
-//⅛ ¹⁄₁₆ ¹⁄₃₂ ¹⁄₆₄
+const getLabelForAccuracy = (roundingAccuracy) => {
+  switch (roundingAccuracy) {
+    case 2:
+      return '½'
+    case 4:
+      return '¼'
+    case 8:
+      return '⅛'
+    case 16:
+      return '¹⁄₁₆'
+    case 32:
+      return '¹⁄₃₂'
+    case 64:
+      return '¹⁄₆₄'
+  }
+}
+
 //↥ ↧
 
 const PadButton = ({label, onPress}) => <TouchableHighlight
