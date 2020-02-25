@@ -1,7 +1,7 @@
 import { SEGMENT_TYPE } from './constants'
 import { convertToFraction } from './utils'
 
-const parseSegmentInt = (string) => string.length > 0 ? parseInt(string) : 0
+const parseSegmentInt = (string) => isNaN(parseInt(string)) ? 0 : parseInt(string)
 
 export const NumberSegment = () => {
   const segment = {

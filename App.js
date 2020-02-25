@@ -10,7 +10,9 @@ import UtilityPad from './components/UtilityPad'
 const INITIAL_STATE = {
   calculationSegments: [],
   showFractionNumpad: false,
-  currentSegmentEvents: []
+  currentSegmentEvents: [],
+  solution: undefined,
+  showSolution: false
 }
 
 const ROUNDING_ACCURACY = 16 // is equal to 1/16th
@@ -27,9 +29,10 @@ export default class App extends React.Component {
         break
 
       case EVENT_TYPE.operational:
-        if (this.state.calculationSegments.length === 0 && this.state.currentSegmentEvents.length === 0) {
+        if (this.state.calculationSegments.length === 0 && this.state.currentSegmentEvents.length === 0 && !this.state.solution) {
           // Prevent starting calculations with an operation
         } else {
+
           newState = {
             ...newState,
             showFractionNumpad: false,
@@ -39,6 +42,13 @@ export default class App extends React.Component {
               ...(this.state.currentSegmentEvents.length > 0 ? [this.truncateValueSegment()] : []),
               buildOperationalSegment(e.value)
             ],
+            showSolution: false,
+            solution: undefined
+          }
+
+          if (this.state.calculationSegments.length === 0 && this.state.currentSegmentEvents.length === 0 && this.state.solution) {
+            // Use solution as the first value if there is no value set yet
+            newState.calculationSegments.unshift(this.state.solution)
           }
         }
         break
@@ -49,6 +59,8 @@ export default class App extends React.Component {
         newState = {
           ...newState,
           currentSegmentEvents: [...this.state.currentSegmentEvents, e],
+          showSolution: false,
+          solution: undefined
         }
         break
     }
@@ -76,8 +88,10 @@ export default class App extends React.Component {
 
     this.setState({
       currentSegmentEvents: [],
-      calculationSegments: [segment],
-      showFractionNumpad: false
+      calculationSegments: [],
+      showFractionNumpad: false,
+      showSolution: true,
+      solution: segment
     })
   }
 
@@ -92,16 +106,18 @@ export default class App extends React.Component {
 
   render () {
     console.log(this.state)
+
     return (
       <View style={styles.container}>
         <View style={styles.displayContainer}>
-          <Output style={styles.display} segments={this.allCalculationSegments()}/>
+          <Output style={styles.display}
+                  segments={this.state.showSolution ? [this.state.solution] : this.allCalculationSegments()}/>
         </View>
 
         <View style={styles.row}>
 
           <View style={styles.left}>
-            <UtilityPad/>
+            {/*<UtilityPad/>*/}
 
             {this.state.showFractionNumpad
               ? <View style={styles.numpad}>
