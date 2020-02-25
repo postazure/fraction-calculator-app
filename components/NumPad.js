@@ -53,7 +53,7 @@ export default class NumPad extends React.Component {
     onPress={this.props.openFractionNumpad}
   ><Text
     style={style.text}
-  >⅛</Text></TouchableOpacity>
+  >Frac</Text></TouchableOpacity>
 
   render () {
     return (
