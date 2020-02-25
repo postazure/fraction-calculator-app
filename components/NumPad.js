@@ -1,10 +1,8 @@
 import React from 'react'
-import { Text, View, TouchableHighlight, StyleSheet } from 'react-native'
-import { EVENT_TYPE } from '../constants'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 const style = StyleSheet.create({
   numpad: {
-
     width: '100%',
     display: 'flex',
     flex: 1
@@ -16,7 +14,6 @@ const style = StyleSheet.create({
     flex: 1
   },
   button: {
-    backgroundColor: 'orange',
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: 'black',
@@ -37,26 +34,26 @@ export default class NumPad extends React.Component {
     this.props.onChange({value, type: this.props.eventType})
   }
 
-  renderNumber = (value) => <TouchableHighlight
-    style={style.button}
+  renderNumber = (value) => <TouchableOpacity
+    style={{...style.button, backgroundColor: this.props.color || 'orange'}}
     onPress={this.handleInput(value)}
   ><Text
     style={style.text}
-  >{value}</Text></TouchableHighlight>
+  >{value}</Text></TouchableOpacity>
 
-  renderClear = () => <TouchableHighlight
-    style={style.button}
+  renderClear = () => <TouchableOpacity
+    style={{...style.button, backgroundColor: this.props.color || 'orange'}}
     onPress={() => this.props.onClear({type: this.props.eventType})}
   ><Text
     style={style.text}
-  >CLR</Text></TouchableHighlight>
+  >CLR</Text></TouchableOpacity>
 
-  renderFrac = () => <TouchableHighlight
-    style={style.button}
+  renderFrac = () => <TouchableOpacity
+    style={{...style.button, backgroundColor: this.props.color || 'orange'}}
     onPress={this.props.openFractionNumpad}
   ><Text
     style={style.text}
-  >⅛</Text></TouchableHighlight>
+  >⅛</Text></TouchableOpacity>
 
   render () {
     return (

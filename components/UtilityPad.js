@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 const style = StyleSheet.create({
   pad: {
@@ -14,7 +14,7 @@ const style = StyleSheet.create({
     flex: 1
   },
   button: {
-    backgroundColor: 'teal',
+    backgroundColor: '#4682B4',
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: 'black',
@@ -75,9 +75,9 @@ const getLabelForStrategy = (roundingStrategy) => {
   }
 }
 
-const PadButton = ({label, onPress, styles}) => <TouchableHighlight
+const PadButton = ({label, onPress, styles}) => <TouchableOpacity
   style={style.button}
   onPress={onPress}>
   <Text style={[style.text, styles]}>{label}</Text>
-</TouchableHighlight>
+</TouchableOpacity>
 

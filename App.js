@@ -149,8 +149,8 @@ export default class App extends React.Component {
 
             {this.state.showFractionNumpad
               ? <View style={styles.numpad}>
-                <NumPad onChange={this.handleInput} onClear={this.handleClear} eventType={EVENT_TYPE.numerator}/>
-                <NumPad onChange={this.handleInput} onClear={this.handleClear} eventType={EVENT_TYPE.denominator}/>
+                <NumPad color='LIGHTSALMON' onChange={this.handleInput} onClear={this.handleClear} eventType={EVENT_TYPE.numerator}/>
+                <NumPad color='darkorange' onChange={this.handleInput} onClear={this.handleClear} eventType={EVENT_TYPE.denominator}/>
               </View>
               : <View style={styles.numpad}>
                 <NumPad onChange={this.handleInput}

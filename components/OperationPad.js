@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { EVENT_TYPE } from '../constants'
 
 const style = StyleSheet.create({
@@ -15,7 +15,7 @@ const style = StyleSheet.create({
     flex: 1
   },
   button: {
-    backgroundColor: 'grey',
+    backgroundColor: '#C0C0C0',
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: 'black',
@@ -32,13 +32,13 @@ const style = StyleSheet.create({
 
 export default class OperationPad extends React.Component {
 
-  renderOperation = (value) => <TouchableHighlight style={style.button} onPress={() => {this.props.onChange({value, type: EVENT_TYPE.operational})}}>
+  renderOperation = (value) => <TouchableOpacity style={style.button} onPress={() => {this.props.onChange({value, type: EVENT_TYPE.operational})}}>
     <Text style={style.text}>{value}</Text>
-  </TouchableHighlight>
+  </TouchableOpacity>
 
-  renderEvaluate = () => <TouchableHighlight style={style.button} onPress={this.props.onEvaluate}>
+  renderEvaluate = () => <TouchableOpacity style={style.button} onPress={this.props.onEvaluate}>
     <Text style={style.text}>=</Text>
-  </TouchableHighlight>
+  </TouchableOpacity>
 
   render () {
     return (
