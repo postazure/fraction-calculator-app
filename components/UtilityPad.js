@@ -27,6 +27,9 @@ const style = StyleSheet.create({
     fontWeight: 'bold',
     alignSelf: 'center',
     color: 'white'
+  },
+  strategy: {
+    fontSize: 50
   }
 })
 
@@ -36,8 +39,9 @@ export default class UtilityPad extends React.Component {
       <View style={style.pad}>
 
         <PadButton label={'C'} onPress={this.props.onClear}/>
-        <PadButton label={getLabelForAccuracy(this.props.roundingAccuracy)} onPress={this.props.onRoundingAccuracyPress}/>
-        {/*<PadButton label={'↕'} onPress={()=>{}}/>*/}
+        <PadButton label={getLabelForAccuracy(this.props.roundingAccuracy)}
+                   onPress={this.props.onRoundingAccuracyPress}/>
+        <PadButton label={getLabelForStrategy(this.props.roundingStrategy)} onPress={this.props.onRoundingStrategyPress} styles={style.strategy}/>
       </View>
     )
   }
@@ -60,11 +64,20 @@ const getLabelForAccuracy = (roundingAccuracy) => {
   }
 }
 
-//↥ ↧
+const getLabelForStrategy = (roundingStrategy) => {
+  switch (roundingStrategy) {
+    case Math.ceil:
+      return '⥘'
+    case Math.floor:
+      return '⥕'
+    case Math.round:
+      return '⥮'
+  }
+}
 
-const PadButton = ({label, onPress}) => <TouchableHighlight
+const PadButton = ({label, onPress, styles}) => <TouchableHighlight
   style={style.button}
   onPress={onPress}>
-  <Text style={style.text}>{label}</Text>
+  <Text style={[style.text, styles]}>{label}</Text>
 </TouchableHighlight>
 

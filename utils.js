@@ -5,6 +5,7 @@ const greatestCommonDenominator = function (a, b) {
 
   return greatestCommonDenominator(b, Math.floor(a % b)) // handle LIMIT 0
 }
+
 export const convertToFraction = (decimal) => {
   let len = decimal.toString().length - 2
 
@@ -17,4 +18,12 @@ export const convertToFraction = (decimal) => {
   denominator = Math.floor(denominator / divisor)
 
   return {numerator, denominator}
+}
+
+export const cycleValue = (arr, currentIndex) => {
+  let nextIndex = arr.indexOf(currentIndex)
+  if (nextIndex++ >= arr.length - 1) {
+    nextIndex = 0
+  }
+  return arr[nextIndex]
 }

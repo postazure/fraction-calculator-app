@@ -1,11 +1,12 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import NumPad from './components/NumPad'
 import OperationPad from './components/OperationPad'
-import { EVENT_TYPE, SEGMENT_TYPE } from './constants'
+import { EVENT_TYPE } from './constants'
 import Output from './components/Output'
 import { buildNumberSegment, buildOperationalSegment, calculateSegments, NumberSegment } from './segment'
 import UtilityPad from './components/UtilityPad'
+import { cycleValue } from './utils'
 
 const INITIAL_STATE = {
   calculationSegments: [],
@@ -13,10 +14,9 @@ const INITIAL_STATE = {
   currentSegmentEvents: [],
   solution: undefined,
   showSolution: false,
-  roundingAccuracy: 16 // is equal to 1/16th
+  roundingAccuracy: 16, // is equal to 1/16th,
+  roundingStrategy: Math.floor
 }
-
-const ROUNDING_STRATEGY = Math.floor // floor, ceiling, straight
 
 export default class App extends React.Component {
   state = INITIAL_STATE
@@ -75,7 +75,7 @@ export default class App extends React.Component {
     }
   }
 
-  handleAllClear = () => this.setState(INITIAL_STATE)
+  handleAllClear = () => this.setState({...INITIAL_STATE, roundingAccuracy: this.state.roundingAccuracy, roundingStrategy: this.state.roundingStrategy})
 
   truncateValueSegment = () => {
     const segment = NumberSegment()
@@ -93,11 +93,12 @@ export default class App extends React.Component {
 
   cycleRoundingAccuracy = () => {
     const possibleDenominators = [2, 4, 8, 16, 32, 64]
-    let currentIndex = possibleDenominators.indexOf(this.state.roundingAccuracy)
-    if (currentIndex++ >= possibleDenominators.length - 1) {
-      currentIndex = 0
-    }
-    this.setState({roundingAccuracy: possibleDenominators[currentIndex]})
+    this.setState({roundingAccuracy: cycleValue(possibleDenominators, this.state.roundingAccuracy)})
+  }
+
+  cycleRoundingStrategy = () => {
+    const possibleStrategies = [Math.floor, Math.ceil, Math.round]
+    this.setState({roundingStrategy: cycleValue(possibleStrategies, this.state.roundingStrategy)})
   }
 
   handleEvaluation = () => {
@@ -107,7 +108,7 @@ export default class App extends React.Component {
     }
 
     const sum = calculateSegments(segments)
-    const segment = buildNumberSegment(sum, ROUNDING_STRATEGY, this.state.roundingAccuracy)
+    const segment = buildNumberSegment(sum, this.state.roundingStrategy, this.state.roundingAccuracy)
 
     this.setState({
       currentSegmentEvents: [],
@@ -144,6 +145,8 @@ export default class App extends React.Component {
               onClear={this.handleAllClear}
               onRoundingAccuracyPress={this.cycleRoundingAccuracy}
               roundingAccuracy={this.state.roundingAccuracy}
+              onRoundingStrategyPress={this.cycleRoundingStrategy}
+              roundingStrategy={this.state.roundingStrategy}
             />
 
             {this.state.showFractionNumpad
