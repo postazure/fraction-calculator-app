@@ -46,7 +46,7 @@ export default class NumPad extends React.Component {
 
   renderClear = () => <TouchableHighlight
     style={style.button}
-    onPress={() => this.props.onChange({type: EVENT_TYPE.clear})}
+    onPress={() => this.props.onClear({type: this.props.eventType})}
   ><Text
     style={style.text}
   >CLR</Text></TouchableHighlight>

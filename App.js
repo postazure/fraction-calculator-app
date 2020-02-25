@@ -68,6 +68,17 @@ export default class App extends React.Component {
     this.setState(newState)
   }
 
+  handleClear = ({type}) => {
+    switch (type) {
+      case EVENT_TYPE.numerator:
+        return this.setState({currentSegmentEvents: this.state.currentSegmentEvents.filter(e => e.type !== EVENT_TYPE.numerator)})
+      case EVENT_TYPE.denominator:
+        return this.setState({currentSegmentEvents: this.state.currentSegmentEvents.filter(e => e.type !== EVENT_TYPE.denominator)})
+      case EVENT_TYPE.integer:
+        return this.setState({currentSegmentEvents: []})
+    }
+  }
+
   truncateValueSegment = () => {
     const segment = NumberSegment()
 
@@ -121,11 +132,13 @@ export default class App extends React.Component {
 
             {this.state.showFractionNumpad
               ? <View style={styles.numpad}>
-                <NumPad onChange={this.handleInput} eventType={EVENT_TYPE.numerator}/>
-                <NumPad onChange={this.handleInput} eventType={EVENT_TYPE.denominator}/>
+                <NumPad onChange={this.handleInput} onClear={this.handleClear} eventType={EVENT_TYPE.numerator}/>
+                <NumPad onChange={this.handleInput} onClear={this.handleClear} eventType={EVENT_TYPE.denominator}/>
               </View>
               : <View style={styles.numpad}>
-                <NumPad onChange={this.handleInput} eventType={EVENT_TYPE.integer}
+                <NumPad onChange={this.handleInput}
+                        onClear={this.handleClear}
+                        eventType={EVENT_TYPE.integer}
                         openFractionNumpad={this.handleOpenFractionNumpad}/>
               </View>
             }
